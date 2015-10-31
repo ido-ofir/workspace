@@ -1,0 +1,5 @@
+{
+  "secret": "kokoloko",
+  "adapter": "disk",
+  "autoRemoveInterval": 360
+}
