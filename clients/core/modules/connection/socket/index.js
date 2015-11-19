@@ -12,7 +12,6 @@
 
 
 var Socket = require('engine.io-client');
-var Api = require('./api.js');
 var utils = require('../utils.js');
 var Request = require('./request.js');
 var Action = require('./action.js');
@@ -38,7 +37,6 @@ module.exports = function(url, onMessage, onClose){
     };
     socket.request = Request(socket);   // sends type 'request', listens for type 'response'
     socket.action = Action(socket);
-    socket.api = Api(socket);   //   { create(), find(), ... }
     socket.on('close', function(){
       opened = false;
       console.log('socket closed');

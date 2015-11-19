@@ -1,22 +1,22 @@
 
-var BufferLoader = require('./BufferLoader.js');
-var sounds = {};
-var AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
-var loaded = false;
+// var BufferLoader = require('./BufferLoader.js');
+// var sounds = {};
+// var AudioContext = window.AudioContext || window.webkitAudioContext;
+// var context = new AudioContext();
+// var loaded = false;
 
-new BufferLoader(
-    context,[
-        '/resources/sounds/call.mp3',
-        '/resources/sounds/notification.mp3'
-    ],
-    function (bufferList) {
-        sounds.call = {buffer: bufferList[0]};
-        sounds.notification = {buffer: bufferList[1]};
-        loaded = true;
+// new BufferLoader(
+//     context,[
+//         '/resources/sounds/call.mp3',
+//         '/resources/sounds/notification.mp3'
+//     ],
+//     function (bufferList) {
+//         sounds.call = {buffer: bufferList[0]};
+//         sounds.notification = {buffer: bufferList[1]};
+//         loaded = true;
 
-    }
-).load();
+//     }
+// ).load();
 
 function play(name) {
   if(!loaded) return;

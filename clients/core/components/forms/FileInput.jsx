@@ -1,4 +1,4 @@
-
+var React = require('react');
 var inputStyle = {
   position: 'absolute',
   top: 0,

@@ -1,4 +1,4 @@
-
+var React = require('react');
 var style = {
   justifyContent: 'center',
   alignItems: 'center',

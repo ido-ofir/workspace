@@ -1,0 +1,40 @@
+{
+  "data": {
+    "sessions": [
+      {
+        "sid": "RCt6XWvmxqaylm7RCedro78zKtdjLITA",
+        "session": "{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{\"user\":1}}",
+        "expires": "2015-11-22T08:26:26.388Z",
+        "has_expires": true,
+        "updatedAt": "2015-11-08T08:26:26.388Z"
+      }
+    ]
+  },
+  "schema": {
+    "sessions": {
+      "sid": {
+        "type": "string",
+        "primaryKey": true,
+        "unique": true
+      },
+      "session": {
+        "type": "string"
+      },
+      "expires": {
+        "type": "datetime"
+      },
+      "has_expires": {
+        "type": "boolean"
+      },
+      "lastModified": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    }
+  },
+  "counters": {
+    "sessions": {}
+  }
+}

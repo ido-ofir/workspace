@@ -1,4 +1,4 @@
-
+var React = require('react');
 var styles = {
   base: {
     background: 'rgb(58, 176, 201)',
@@ -9,9 +9,10 @@ var styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '42px',
+    height: '38px',
     fontSize: '14px',
-    fontWeight: 100
+    fontWeight: 100,
+    cursor: 'pointer'
 },
   primary: {
     background: 'rgb(58, 176, 201)'
@@ -44,4 +45,4 @@ var Button = React.createClass({
   }
 });
 
-module.exports = Radium(Button);
+module.exports = Button;

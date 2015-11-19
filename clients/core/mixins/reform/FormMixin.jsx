@@ -1,4 +1,4 @@
-
+var React = require('react');
 var { batch, stopEvent } = require('./utils');
 
 function addListeners(component) {
@@ -79,9 +79,10 @@ module.exports = {
         });
         return formIsValid;
     },
-    invalidate (rejects){
+    invalidate (response){
       var input;
-      if(rejects.reject) rejects = rejects.reject;
+      if(!response.type === 'reject') return;
+      var rejects = response.data;
       for(var m in rejects){
         input = this.state.inputs[m];
         if(input){

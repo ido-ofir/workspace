@@ -1,86 +1,73 @@
+var Action = require('./Action.js');
 
-function Action(path, data, user, callback){
-  this.path = path;
-  this.data = data;
-  this.user = user;
-  this.callback = callback;
-  this.actions = [];
-}
-
-Action.prototype = {
-  find(collection, data, cb){
-    var action = Action(['db', collection, 'find'], data, this.user, cb);
-    core.actions.run(action);
-  },
-  create(collection, data, cb){},
-  update(collection, data, cb){},
-  delete(collection, data, cb){
-
-  },
-  action(route, data, cb){},
-  done(data){
-    this.callback({
-      success: true,
-      data: data
-    });
-  },
-  fail(data){
-    this.callback({
-      success: false,
-      data: data
-    });
-  },
-  reject(reject){
-    this.fail({
-      reject: reject
-    });
-  },
-  error(error){
-    this.fail({
-      error: error
-    });
+function sequence(action, listeners, cb){  // run all listeners, passing action. call action.next() to continue.
+  if(!listeners) return cb();
+  var i = listeners.length;
+  if(!i) return cb();
+  function run(){
+    i--;
+    var f = listeners[i];
+    action.next = i ? run : cb;
+    f(action);
   }
-};
-
+  run();
+}
 module.exports = function(core){
 
-  var actions = {};
+  var before = {};
+  var after = {};
+  var methods = {};
 
   function find(target, path){
     if(!target || !path) return;
     var name = path[0];
-    if(path.length === 1) return target[name];
+    if(path.length === 1) return { target: target, name: name, value: target[name] };
     return find(target[name], path.slice(1));
   }
 
-  function method(path, method){
-    core.app.post('/' + path.join('/'), function(req, res, next){
-      var action = Action(path, req.body, req.user, function(data){
-        res.json(data);
-      });
-      method(action);
-    });
-  }
-
-  function define(path, any){
-    if(any instanceof Function){
-      method(path, any);
-    }
-    else if(any instanceof Object){
-      for(var m in any){
-        define(path.concat([m]), any[m]);
-      }
-    }
-  }
-
-  return {
-    run: function(action){   // sockets that send a { type: action } will route to the relevant action.
-        var found = find(actions, action.path);
-        if(found instanceof Function) found(action);
-        else action.fail('incorrect path - ' + action.path);
+  var actions = {
+    define(name, method){
+      methods[name] = method;
     },
-    define: function(name, method){
-      actions[name] = define([name], method);
+    run(path, data, user, callback){
+        if(typeof path === 'string'){
+          path = path.split('.');
+          if(!path[1]) path = path[0].split('/');
+        }
+        var id, action, method, found = find(methods, path);
+        if(!found) return null;
+        if(found.value instanceof Function) {
+          id = path.join('.');
+          action = new Action(path, data, user, function(err, data){
+            if(err) return callback(err);
+            sequence(action, after[id], function(){
+              callback(null, action.response);
+            });
+          });
+          sequence(action, before[id], function(){
+            found.target[found.name](action);  // call method with context
+          });
+          return action;
+        }
+        return null;
+    },
+    before(path, listener){
+      if(Array.isArray(path)) path = path.join('.');
+      if(typeof path !== 'string'){
+        return console.error(`path is not valid - ${path}`);
+      }
+      if(!before[path]) before[path] = [];
+      before[path].push(listener);
+    },
+    after(path, listener){
+      if(Array.isArray(path)) path = path.join('.');
+      if(typeof path !== 'string'){
+        return console.error(`path is not valid - ${path}`);
+      }
+      if(!after[path]) after[path] = [];
+      after[path].push(listener);
     }
   };
+
+  return actions;
 }

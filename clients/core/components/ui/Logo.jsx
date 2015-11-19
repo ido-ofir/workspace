@@ -1,4 +1,6 @@
 // var logo = require('./logo.png');
+
+var React = require('react');
 var styles = {
       base: {
         width: '100%',
@@ -30,4 +32,4 @@ var Logo = React.createClass({
   }
 });
 
-module.exports = Radium(Logo);
+module.exports = Logo;

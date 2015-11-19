@@ -1,3 +1,5 @@
+
+var React = require('react');
 module.exports = {
   childContextTypes: {
     toggle: React.PropTypes.object

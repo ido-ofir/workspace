@@ -1,0 +1,37 @@
+{
+  "name": "clients",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.25",
+    "baobab": "^2.0.0",
+    "baobab-react": "^1.0.0",
+    "classnames": "^2.1.5",
+    "css-loader": "^0.19.0",
+    "engine.io-client": "^1.5.4",
+    "file-loader": "^0.8.4",
+    "moment": "^2.10.6",
+    "node-sass": "^3.3.3",
+    "open": "^0.0.5",
+    "react": "^0.13.3",
+    "react-hot-loader": "^1.3.0",
+    "sass-loader": "^3.0.0",
+    "source-list-map": "^0.1.5",
+    "source-map": "^0.4.4",
+    "style-loader": "^0.12.4",
+    "subdivide": "^0.1.0",
+    "superagent": "^1.4.0",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

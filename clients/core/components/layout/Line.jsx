@@ -1,5 +1,7 @@
+
+var React = require('react');
 var lineStyle = {
-  margin: '34px 0'
+  margin: '20px 0'
 }
 
 var Line = React.createClass({

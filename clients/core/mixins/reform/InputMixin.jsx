@@ -1,4 +1,4 @@
-
+var React = require('react');
 var validationMethods = require('./validationMethods');
 module.exports = {
     getInitialState () {

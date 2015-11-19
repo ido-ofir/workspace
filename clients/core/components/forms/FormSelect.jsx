@@ -1,4 +1,4 @@
-
+var React = require('react');
 var reform = require('../../mixins/reform');
 
 var inputStyle = {
@@ -27,7 +27,7 @@ var errorStyle = {
     fontSize: '11px'
 };
 
-module.exports = Radium(React.createClass({
+module.exports = React.createClass({
     mixins: [reform.Input],
     propTypes: {
         cursor: React.PropTypes.object.isRequired,
@@ -84,4 +84,4 @@ module.exports = Radium(React.createClass({
             </div>
         );
     }
-}));
+});

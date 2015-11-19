@@ -50,7 +50,7 @@ module.exports = function(config){
     res.reject = reject.bind(res);
     res.success = success.bind(res);
     res.flat = res.json.bind(res);
-    if(config.allowOrigin.indexOf(req.headers.origin) > -1){
+    if(config.app.allowOrigin.indexOf(req.headers.origin) > -1){
       res.header('Access-Control-Allow-Origin' , req.headers.origin);
       res.header('Access-Control-Allow-Credentials' , true );
     }

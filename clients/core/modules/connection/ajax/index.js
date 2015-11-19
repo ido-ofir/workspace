@@ -1,5 +1,4 @@
 var Request = require('./request.js');
-var Api = require('./api.js');
 
 module.exports = function(config){
   var request = Request(config);
@@ -15,6 +14,5 @@ module.exports = function(config){
   request.action = function(path, data, success, fail) {
     request.post('/' + path.join('/'), data, success, fail);
   };
-  request.api = Api(config.api.path, request);
   return request;
 }

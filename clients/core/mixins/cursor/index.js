@@ -1,6 +1,8 @@
 
 module.exports = {
-  Cursor(field){
+  Cursor(path){
+    path = path.split('.');
+    var field = path[0];
     var t = this;
     return {
       set(v){

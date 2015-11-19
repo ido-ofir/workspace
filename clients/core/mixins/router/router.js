@@ -1,3 +1,5 @@
+
+var React = require('react');
 var common = require('./common.js');
 var routerMixin = {
   mixins: [common],

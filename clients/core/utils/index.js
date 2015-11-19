@@ -1,5 +1,5 @@
 var Emitter = require('./Emitter.js');
-var moment = require('./moment.js');
+// var moment = require('./moment.js');
 
 function parse(data){
   try {
@@ -23,6 +23,6 @@ function find(id, array, field){
 module.exports = {
   parse: parse,
   find: find,
-  moment: moment,
+  // moment: moment,
   Emitter: Emitter
 };

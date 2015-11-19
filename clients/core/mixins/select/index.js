@@ -1,3 +1,5 @@
+
+var React = require('react');
 module.exports = {
   componentDidMount(){
     this.selectedItems = [];

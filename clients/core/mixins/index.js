@@ -9,5 +9,7 @@ module.exports = {
   router: router,
   cursor: cursor,
   toggle: toggle,
-  select: select
+  select: select,
+  form: reform.Form,
+  input: reform.Input
 };
