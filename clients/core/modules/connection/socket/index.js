@@ -15,34 +15,66 @@ var Socket = require('engine.io-client');
 var utils = require('../utils.js');
 var Request = require('./request.js');
 var Action = require('./action.js');
+var Emitter = require('../../../utils/Emitter.js');
 
-module.exports = function(url, onMessage, onClose){
-  var opened = false;
-  var socket = new Socket(url);
-  socket.on('open', function(){
-    opened = true;
-    socket.json = function(obj){   // send obj as json.
+module.exports = function(){
+
+  var connected = false;
+  var reconnect = true;
+  var socket;
+
+  var layer = Emitter({
+    json(obj){   // send obj as json.
       var str = utils.stringify(obj);
       if(str) socket.send(str);
-    };
-    socket.exec = function(type, data){
-      if(!opened) return console.error('cannot access server, socket is closed');
-      var msg = {
+    },
+    connect(url, onMessage, onClose){
+      if(connected) return true;
+      reconnect = true;
+      socket = new Socket(url);
+      socket.on('open', function(){
+        connected = true;
+        console.log('socket opened');
+        socket.on('message', function(data){
+          if(onMessage) onMessage(data);
+          layer.emit('message', data);
+        });
+        layer.emit('connect');
+      });
+      socket.on('close', function(){
+        connected = false;
+        console.log('socket closed.');
+        if(onClose) onClose();
+        if(reconnect){
+          console.log('reconnecting..')
+          setTimeout(function(){
+            layer.connect(url, onMessage);
+          },1000)
+        }
+        layer.emit('close');
+      });
+    },
+    exec(type, data){
+      if(!connected) {
+        console.error(`failed to send ${type}. socket is closed:`);
+        console.dir(data);
+      }
+      console.log(`sending ${type}`);
+      layer.json({
         type: type,
         data: data
-      };
-      console.log('sending:');
-      console.dir(msg);
-      socket.json(msg);
-    };
-    socket.request = Request(socket);   // sends type 'request', listens for type 'response'
-    socket.action = Action(socket);
-    socket.on('close', function(){
-      opened = false;
-      console.log('socket closed');
-      if(onClose) onClose();
-    });
-    if(onMessage) socket.on('message', onMessage);
+      });
+    },
+    disconnect(){
+      reconnect = false;
+      socket.close();
+    },
+    isConnected(){
+      return connected;
+    }
   });
-  return socket;
+
+  layer.request = Request(layer);   // sends type 'request', listens for type 'response'
+  layer.action = Action(layer);
+  return layer;
 }

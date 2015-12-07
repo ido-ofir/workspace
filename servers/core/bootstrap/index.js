@@ -36,7 +36,10 @@ function success(data){
   });
 }
 
-
+function callback(err, data){
+  if(err) this.fail(err);
+  else this.success(data);
+}
 
 module.exports = function(config){
   var bootstrap = Middleware();
@@ -49,7 +52,7 @@ module.exports = function(config){
     res.error = error.bind(res);
     res.reject = reject.bind(res);
     res.success = success.bind(res);
-    res.flat = res.json.bind(res);
+    res.callback = callback.bind(res);
     if(config.app.allowOrigin.indexOf(req.headers.origin) > -1){
       res.header('Access-Control-Allow-Origin' , req.headers.origin);
       res.header('Access-Control-Allow-Credentials' , true );

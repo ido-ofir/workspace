@@ -8,7 +8,7 @@
   "loginAfterRegister": false,
   "clients": [{
     "route": "/",
-    "project": "router",
+    "project": "templateMaker",
     "devServer": false
   }]
 }

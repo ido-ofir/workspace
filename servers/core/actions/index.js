@@ -12,6 +12,20 @@ function sequence(action, listeners, cb){  // run all listeners, passing action.
   }
   run();
 }
+
+function serialize(action){
+  var actions = action.actions.map(function(action){
+    return serialize(action);
+  });
+  return {
+    isDone: action.isDone,
+    path: action.path,
+    request: action.request,
+    response: action.response,
+    actions: actions
+  };
+}
+
 module.exports = function(core){
 
   var before = {};
@@ -66,6 +80,11 @@ module.exports = function(core){
       }
       if(!after[path]) after[path] = [];
       after[path].push(listener);
+    },
+    serialize(action){
+      var serial = serialize(action);
+      serial.user = action.user;
+      return serial;
     }
   };
 

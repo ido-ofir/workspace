@@ -13,6 +13,7 @@ var Actions = require('./actions');
 var Permissions = require('./permissions');
 var Groups = require('./groups');
 var Schemas = require('./schemas');
+var Dispatcher = require('./dispatcher');
 var utils = require('./utils');
 
 module.exports = function(config, callback){
@@ -22,7 +23,8 @@ module.exports = function(config, callback){
     var app = express();
     var api = Api(schemas, orm, config);
     // var auth = Authentication(api, permissions, config.authentication);
-    var sockets = Sockets(app);
+    var sockets = Sockets(app, config);
+    var dispatcher = Dispatcher();   //  dispatch and recive action reports from all servers.
     // var permissions = Permissions(api);    // user permissions are handled in-memory by the permissions module.
     // var groups = Groups(api);    // user groupss are handled in-memory by the groups module.
     var core = global.core = {
@@ -69,11 +71,17 @@ module.exports = function(config, callback){
       var path = req.url.split('/');
       path.shift();  // remove empty space
       var action = actions.run(path, req.body, req.user, function(err, data){
-        if(err) res.json({ success: false, data: err });
-        else res.json({ success: true, data: data });
+        console.log('emitting');
+        core.sockets.broadcast({
+          type: 'core.action',
+          data: actions.serialize(action)
+        });
+        res.callback(err, data);
       });
       if(!action) next();
     });
+
+    app.use('/rest', api.rest);
 
     actions.define('api', api.actions);
 
@@ -144,24 +152,28 @@ module.exports = function(config, callback){
     //   done();
     // });
     //
-    // sockets.on('connection', function (socket) {           // fired for every incoming socket connection.
-    //   auth.authenticateSocket(socket, function(){               // authenticate the socket request. a client must be logged to connect to the socket server.
-    //     console.log('socket connected - ' + socket.user.name);  // if authentication passed, this function is called and socket.user is the already logged in user.
-    //     sockets.authorize(socket);
-    //   }, function(err){
-    //     console.log('a socket has failed authentication:', err);     // if authentication failed, close the socket.
-    //     socket.close()
-    //   });
-    // });
-    //
-    // sockets.on('authorize', function(socket){              // this socket has passed authentication and socket.user is the user of the socket.
-    //   core.authorize(socket, function(data){              // override core.authorize in your app code
-    //     socket.json({                       // this is the first message an authenticated socket will recieve.
-    //       type: 'authorize',
-    //       data: data
-    //     });
-    //   });
-    // });
+    sockets.on('connection', function (socket) {           // fired for every incoming socket connection.
+      if(!config.authorize) {
+        console.log('connecting anonymous socket');
+        return sockets.authorize(socket);
+      }
+      auth.authenticateSocket(socket, function(){               // authenticate the socket request. a client must be logged to connect to the socket server.
+        console.log('socket connected - ' + socket.user.name);  // if authentication passed, this function is called and socket.user is the already logged in user.
+        sockets.authorize(socket);
+      }, function(err){
+        console.log('a socket has failed authentication:', err);     // if authentication failed, close the socket.
+        socket.close()
+      });
+    });
+
+    sockets.on('authorize', function(socket){              // this socket has passed authentication and socket.user is the user of the socket.
+      core.authorize(socket, function(data){              // override core.authorize in your app code
+        socket.json({                       // this is the first message an authenticated socket will recieve.
+          type: 'authorize',
+          data: data
+        });
+      });
+    });
 
 
 

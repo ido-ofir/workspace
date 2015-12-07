@@ -14,11 +14,12 @@ function Action(path, data, user, callback){
   this.user = user;
   this.resolve = callback;
   this.actions = [];
+  this.isDone = false;
 }
 
 Action.prototype = {
   run(path, data, cb){ /// try catch
-    
+
     if(typeof path === 'string'){
       path = path.split('.');
       if(!path[1]) path = path[0].split('/');
@@ -51,6 +52,7 @@ Action.prototype = {
   },
   done(data){
     this.response = data;
+    this.isDone = true;
     this.resolve(null, data);
   },
   fail(data){

@@ -7,7 +7,8 @@ var utils = require('./utils.js');
 module.exports = function(config){
   config = config || {};
   var ajax = Ajax(config);
-  var socket, connected = false;
+  var socket = Socket();
+  var connected = false;
 
   var connection = Emitter({
     ajax: ajax,
@@ -20,20 +21,20 @@ module.exports = function(config){
       }
     },
     connect(success, fail){
-      if(socket && socket.close) socket.close();
-      socket = Socket(`${config.domain}:${config.port}`, (message)=>{
+      socket.connect(`${config.domain}:${config.port}`, (message)=>{
         var msg = utils.parse(message);
         if(msg || msg.type){
           if(msg.type === 'response') socket.response(msg);
           else if(msg.type === 'authorize') {
             connected = true;
-            if(success) success(msg.data);
+            connection.emit('connect');
+            if(success) success();
             else console.log(`connected to ${config.domain}:${config.port}`);
           }
-          connection.emit(msg.type, msg.data, msg);
+          else connection.emit(msg.type, msg.data, msg);
         }
       }, ()=>{
-        connection.emit('close');
+        connection.emit('disconnect');
       });
 
       setTimeout(function(){
@@ -76,9 +77,10 @@ module.exports = function(config){
         path = path.split('.');
         if(path.length === 1) path = path[0].split('/');
       }
-      if(connected) socket.action(path, data, success, fail);
+      if(false && connected) socket.action(path, data, success, fail);
       else ajax.action(path, data, success, fail);
     }
   });
+  if(config.autoConnect) connection.connect();
   return connection;
 };

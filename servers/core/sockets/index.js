@@ -2,7 +2,7 @@ var http = require('http');
 var engine = require('engine.io');
 var Socket = require('./socket.js');
 
-module.exports = function(app, options){
+module.exports = function(app){
   var httpServer = http.createServer(app);
   var server = engine.attach(httpServer);
   var sockets = server.sockets = [];

@@ -1,0 +1,173 @@
+{
+  "data": {
+    "userpermissions": [],
+    "usergroup": [],
+    "user": [
+      {
+        "email": "ido@dooble.co.il",
+        "password": "12345678",
+        "createdAt": "2015-11-06T00:21:43.370Z",
+        "updatedAt": "2015-11-06T00:21:43.371Z",
+        "id": 1
+      }
+    ],
+    "chat": [],
+    "passport": [
+      {
+        "protocol": "local",
+        "userId": "1",
+        "password": "$2a$10$IZnfpKwsO9mllz6ZrX3Ra.TwRLLSZCUjWszv.JT81qBAMvx7OnVse",
+        "accessToken": "DsjQ0z6sqHumgfmj9d4NOeV0ZHBmgYlHGYqMb1KoSRBV+K2CqOFLwpGFVNBlwRa0",
+        "createdAt": "2015-11-06T00:21:43.603Z",
+        "updatedAt": "2015-11-06T00:21:43.604Z",
+        "id": 1
+      }
+    ],
+    "userpermission": [
+      {
+        "userId": "1",
+        "permissions": [
+          "basic"
+        ],
+        "createdAt": "2015-11-06T00:21:43.607Z",
+        "updatedAt": "2015-11-06T00:21:43.607Z",
+        "id": 1
+      }
+    ]
+  },
+  "schema": {
+    "userpermissions": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "usergroup": {
+      "name": {
+        "type": "string"
+      },
+      "members": {
+        "type": "array"
+      },
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "user": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "chat": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "passport": {
+      "protocol": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "accessToken": {
+        "type": "string"
+      },
+      "provider": {
+        "type": "string"
+      },
+      "identifier": {
+        "type": "string"
+      },
+      "tokens": {
+        "type": "json"
+      },
+      "userId": {
+        "type": "string",
+        "unique": true
+      },
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "userpermission": {
+      "userId": {
+        "type": "string",
+        "unique": true
+      },
+      "permissions": {
+        "type": "array"
+      },
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    }
+  },
+  "counters": {
+    "userpermissions": {},
+    "usergroup": {},
+    "user": {
+      "id": 1
+    },
+    "chat": {},
+    "passport": {
+      "id": 1
+    },
+    "userpermission": {
+      "id": 1
+    }
+  }
+}

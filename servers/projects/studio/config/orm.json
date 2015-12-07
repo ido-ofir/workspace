@@ -1,0 +1,7 @@
+{
+  "connections": {
+    "localDisk": {
+      "adapter": "disk"
+    }
+  }
+}

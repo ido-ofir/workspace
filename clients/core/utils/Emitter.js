@@ -1,45 +1,54 @@
 
+function Emitter(){
+  this.events = {};
+}
 
+Emitter.prototype = {
+  on(eventName, listener){  // return false in listener to stop the event
+    var event = this.events[eventName];
+    if (!event) {
+        event = this.events[eventName] = {listeners: []};
+    }
+    event.listeners.push(listener);
+    return this;
+  },
+  off(eventName, listener){
+    if (!eventName){
+      this.events = {};
+      return this;
+    }
+    if (!listener){
+      delete this.events[eventName];
+      return this;
+    }
+    var event = this.events[eventName];
+    if (event) {
+        event.listeners = event.listeners.filter((l)=>{
+          return (l === listener);
+        });
+        if (!event.listeners.length) delete this.events[eventName];
+    }
+    return this;
+  },
+  emit(eventName){
+    var cont, event = this.events[eventName];
+    if (!event) return;
+    var args = [].slice.call(arguments, 1);
+    console.dir(args);
+    for (var i = 0; i < event.listeners.length; i++) {
+        cont = event.listeners[i].apply(null, args);
+        if (cont === false) break;
+    }
+    return this;
+  }
+};
 
-module.exports = function Emitter(object) {
-    object = object || {};
-    var events = {};
-    object.emit = function emit(eventName) {
-        var cont, event = events[eventName];
-        if (!event) return;
-        var args = [].slice.call(arguments, 1);
-        for (var i = 0; i < event.listeners.length; i++) {
-            cont = event.listeners[i].apply(null, args);
-            if (cont === false) break;
-        }
-        return object;
-    };
-    object.on = function on(eventName, listener) {
-        var event = events[eventName];
-        if (!event) {
-            event = events[eventName] = {listeners: []};
-        }
-        event.listeners.push(listener);
-        return object;
-    };
-
-    object.off = function off(eventName, listener) {
-        if (!eventName) return (events = {});
-        var event = events[eventName];
-        var listeners = [];
-        if (event) {
-            if (!listener) event.listeners = listeners;
-            else {
-                for (var i = 0; i < event.listeners.length; i++) {
-                    if (event.listeners[i] !== listener) {
-                        listeners.push(event.listeners[i]);
-                    }
-                }
-                if (listeners.length === 0) delete events[eventName];
-                else event.listeners = listeners;
-            }
-        }
-        return object;
-    };
-    return object;
+module.exports = function(object) {
+    var emitter = new Emitter();
+    if(object){
+      for(var m in object){
+        emitter[m] = object[m];
+      }
+    }
+    return emitter;
 };

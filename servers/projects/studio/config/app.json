@@ -1,0 +1,14 @@
+
+{
+  "domain": "http://localhost",
+  "port": 4000,
+  "allowOrigin": ["http://localhost:3000"],
+  "authorize": true,
+  "log": true,
+  "loginAfterRegister": false,
+  "clients": [{
+    "route": "/",
+    "project": "backend",
+    "devServer": false
+  }]
+}
